@@ -16,7 +16,7 @@ jobs:
           node-version: latest
           cache: yarn
       - run: yarn install --network-timeout 600000
-      - uses: salesforcecli/github-workflows/.github/actions/gitConfig@main
+      - uses: oclif/github-workflows/.github/actions/gitConfig@main
       - name: build docs
         run: |
           rm -rf docs
