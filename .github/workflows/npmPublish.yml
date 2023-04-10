@@ -26,13 +26,6 @@ on:
         type: string
         default: lts/*
         required: false
-      ctc:
-        description: |
-          Use CTC.  Requires environment to contain
-          SF_CHANGE_CASE_SFDX_AUTH_URL, SF_CHANGE_CASE_TEMPLATE_ID, SF_CHANGE_CASE_CONFIGURATION_ITEM.
-          Also requires a static ip runner (you can't use ubuntu-latest)
-        type: boolean
-        required: false
       runsOn:
         description: the runner.  Only needed if you need a non-public runner (ex, for git checkout from IP restricted private repo)
         default: ubuntu-latest
@@ -60,14 +53,8 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: echo "published said ${{ steps.is-published.outputs.published }}"
 
-  ctc-open:
-    needs: [check-publish]
-    if: inputs.ctc && needs.check-publish.outputs.published == 'false'
-    uses: oclif/github-workflows/.github/workflows/ctcOpen.yml@main
-    secrets: inherit
-
   npm-publish:
-    needs: [check-publish, ctc-open]
+    needs: [check-publish]
     if: ${{ always() && needs.check-publish.outputs.published == 'false' }}
     runs-on: ${{ inputs.runsOn }}
     steps:
@@ -122,20 +109,3 @@ jobs:
         run: sf-release npm:package:release --githubtag ${{ inputs.githubTag}} --no-install --npmtag ${{ inputs.tag }} --prerelease ${{ github.ref_name}}
         env:
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-
-  ctcCloseSuccess:
-    needs: [ctc-open, npm-publish]
-    if: needs.ctc-open.result == 'success' && needs.npm-publish.result == 'success'
-    uses: oclif/github-workflows/.github/workflows/ctcClose.yml@main
-    secrets: inherit
-    with:
-      changeCaseId: ${{needs.ctc-open.outputs.changeCaseId}}
-
-  ctcCloseFail:
-    needs: [ctc-open, npm-publish]
-    if: always() && inputs.ctc && (needs.ctc-open.outputs.changeCaseId && needs.ctc-open.result != 'success' || needs.npm-publish.result != 'success')
-    uses: oclif/github-workflows/.github/workflows/ctcClose.yml@main
-    secrets: inherit
-    with:
-      changeCaseId: ${{ needs.ctc-open.outputs.changeCaseId }}
-      status: Not Implemented
