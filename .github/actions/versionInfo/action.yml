@@ -7,7 +7,7 @@ inputs:
     description: an npm version number (like 7.180.8) or an npm tag like latest/latest-rc
   npmPackage:
     required: false
-    default: sfdx-cli
+    default: @salesforce/cli
     description: full npm package name, including namespace if one exists
 
 outputs:
