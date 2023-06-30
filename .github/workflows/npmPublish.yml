@@ -67,7 +67,7 @@ jobs:
           cache: yarn
       - run: yarn install --network-timeout 600000
       - run: yarn build
-      - run: npm install @salesforce/cli -g @salesforce/plugin-release-management --omit=dev
+      - run: npm install@salesforce/cli@beta -g @salesforce/plugin-release-management --omit=dev
 
       # when dryrun is true: publish with --dryrun flag
       - if: ${{ inputs.dryrun && !inputs.prerelease }}
