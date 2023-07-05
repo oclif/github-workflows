@@ -35,7 +35,7 @@ jobs:
         with:
           node-version: ${{ inputs.nodeVersion }}
           cache: yarn
-      - run: npm install -g@salesforce/cli@beta --omit=dev
+      - run: npm install -g @salesforce/cli@beta --omit=dev
       - run: yarn install --network-timeout 600000
       - run: yarn compile
       - run: ${{ inputs.command }}
