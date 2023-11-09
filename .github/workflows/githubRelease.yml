@@ -8,9 +8,10 @@ on:
         default: false
         description: use a prerelease instead of a regular release
 
-# -----------------------------------------------------------------------
-# NOTE: This workflow is deprecated in favor of create-github-release.yml
-# -----------------------------------------------------------------------
+# --------------------------------------------------------------------------
+# NOTE: This workflow is deprecated in favor of:
+# salesforcecli/github-workflows/.github/workflows/create-github-release.yml
+# --------------------------------------------------------------------------
 
 jobs:
   release:
